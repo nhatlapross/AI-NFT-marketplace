@@ -7,8 +7,8 @@ import {ConnectButton} from '@suiet/wallet-kit';
 const Menu = () => (
   <>
      <Link to="/"><p>Explore</p> </Link>
-     <p>My Items</p>
-    
+     <Link to="/Mint"><p>Mint</p> </Link>
+     <Link to="/MyItems"><p>My Items</p> </Link>
   </>
  )
 

@@ -10,6 +10,26 @@ import bids6 from '../../assets/bids6.png'
 import bids7 from '../../assets/bids7.png'
 import bids8 from '../../assets/bids8.png'
 import { Link } from 'react-router-dom';
+import { Card, Row, Col } from 'react-bootstrap';
+
+const data = [
+  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
+  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
+  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
+  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
+  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
+  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
+  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
+  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
+  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
+  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
+  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
+  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
+  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
+  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
+  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
+  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
+]
 
 const Bids = ({ title }) => {
   const [isCardShown, setCardShown] = useState(true);
@@ -20,122 +40,23 @@ const Bids = ({ title }) => {
           <h1>{title}</h1>
         </div>
         <div className="bids-container-card">
-          {isCardShown &&
-            <div className="card-column" >
+          {data.map((d, index) => (
+            <div className='card-column'>
               <div className="bids-card">
                 <div className="bids-card-top">
-                  <img src={bids1} alt="" />
-                  <Link to={`/item/0`}>
-                    <p className="bids-title">Abstact Smoke Red</p>
+                  <img className="photo" src={d.img} alt="" />
+                  <Link to={d.link}>
+                    <p className="bids-title">{d.name}</p>
                   </Link>
                 </div>
                 <div className="bids-card-bottom">
-                  <p>100 <span>SUI</span></p>
-                  <p> <AiFillHeart /> 92</p>
+                  <p>{d.price} <span>SUI</span></p>
+                  <p> <AiFillHeart /> {d.like}</p>
                 </div>
               </div>
             </div>
-          }
-
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids2} alt="" />
-                <Link to={`/item/1`}>
-                  <p className="bids-title">Mountain Landscape</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 25</p>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids3} alt="" />
-                <Link to={`/item/2`}>
-                  <p className="bids-title">Paint Color on Wall</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 55</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids4} alt="" />
-                <Link to={`/item/3`}>
-                  <p className="bids-title">Abstract Patern</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 82</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids5} alt="" />
-                <Link to={`/item/4`}>
-                  <p className="bids-title">White Line Grafiti</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 22</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids6} alt="" />
-                <Link to={`/item/5`}>
-                  <p className="bids-title">Abstract Triangle</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 71</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids7} alt="" />
-                <Link to={`/item/6`}>
-                  <p className="bids-title">Lake Landscape</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 63</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids8} alt="" />
-                <Link to={`/item/7`}>
-                  <p className="bids-title">Blue Red Art</p>
-                </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>100 <span>SUI</span></p>
-                <p> <AiFillHeart /> 66</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div className="load-more">
         <button>Load More</button>
