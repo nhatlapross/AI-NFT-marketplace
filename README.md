@@ -7,3 +7,7 @@ AI art NFT marketplace with SUI
    - mua bán đấu giá NFT
 3. Chat GPT API tạo tác phẩm nghệ thuật đưa lên IPFS
 4. Hoàn thiện Front-end
+# Run Front-end
+cd front-end
+npm install
+npm start
