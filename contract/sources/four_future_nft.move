@@ -23,6 +23,10 @@ module contract::four_future_nft {
         creator: address,
         // The name of the NFT
         name: string::String,
+        // The description of the NFT
+        description: string::String,
+        // The url of the NFT
+        url: Url,
     }
 
     struct NFTTransfered has copy, drop {
@@ -82,6 +86,8 @@ module contract::four_future_nft {
             object_id: object::id(&nft),
             creator: sender,
             name: nft.name,
+            description: nft.description,
+            url: nft.url,
         });
 
         transfer::public_transfer(nft, sender);
