@@ -32,7 +32,6 @@ const data = [
 ]
 
 const Bids = ({ title }) => {
-  const [isCardShown, setCardShown] = useState(true);
   return (
     <div className='bids section__padding'>
       <div className="bids-container">
@@ -40,7 +39,7 @@ const Bids = ({ title }) => {
           <h1>{title}</h1>
         </div>
         <div className="bids-container-card">
-          {data.map((d, index) => (
+          {data.map((d) => (
             <div className='card-column'>
               <div className="bids-card">
                 <div className="bids-card-top">

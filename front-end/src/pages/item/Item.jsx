@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import './item.css'
 import creator from '../../assets/seller2.png'
-import item from '../../assets/item1.png'
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useWallet } from '@suiet/wallet-kit'
-// import { TransactionBlock } from "@mysten/sui.js";
+//import { TransactionBlock } from "@mysten/sui.js";
 
 const mapping = {
-  0: { targetId: "", name: "Abstract Smoke Red", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids1.png?raw=true" },
-  1: { targetId: "", name: "Mountain Landscape", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids2.png?raw=true" },
-  2: { targetId: "", name: "Paint Colour on Wall", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids3.png?raw=true" },
-  3: { targetId: "", name: "Abstract Pattern", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids4.png?raw=true" },
-  4: { targetId: "", name: "White Line Grafiti", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids5.png?raw=true" },
-  5: { targetId: "", name: "Abstract Triangle", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids6.png?raw=true" },
-  6: { targetId: "", name: "Lake Landscape", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids7.png?raw=true" },
-  7: { targetId: "", name: "Blue Red Art", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids8.png?raw=true" },
+  0: { targetId: "0", name: "Abstract Smoke Red", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids1.png?raw=true" },
+  1: { targetId: "1", name: "Mountain Landscape", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids2.png?raw=true" },
+  2: { targetId: "2", name: "Paint Colour on Wall", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids3.png?raw=true" },
+  3: { targetId: "3", name: "Abstract Pattern", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids4.png?raw=true" },
+  4: { targetId: "4", name: "White Line Grafiti", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids5.png?raw=true" },
+  5: { targetId: "5", name: "Abstract Triangle", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids6.png?raw=true" },
+  6: { targetId: "6", name: "Lake Landscape", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids7.png?raw=true" },
+  7: { targetId: "7", name: "Blue Red Art", imgAddress: "https://github.com/kasim393/NFT-Marketplace-UI/blob/main/src/assets/bids8.png?raw=true" },
 };
 const Item = () => {
   let id = useParams().id;
@@ -32,6 +31,7 @@ const Item = () => {
   const enableButton = () => {
     setButtonDisabled(false);
   };
+
   const handleOnClick = () => {
     let targetId = mapping[id].targetId;
     let address = wallet.account?wallet.account.address:"";
@@ -69,15 +69,12 @@ const Item = () => {
 
         </div>
         <div className="item-content-buy">
-          <Link >
             {isButtonDisabled &&
               <button style={{ color:'black'  }} onClick={handleOnClick} className="primary-btn">Bought!</button>
             }
             {!isButtonDisabled &&
               <button style={{ color: 'white' }} onClick={handleOnClick} className="primary-btn">Buy For 100 SUI</button>
             }
-            
-          </Link>
         </div>
       </div>
     </div>
