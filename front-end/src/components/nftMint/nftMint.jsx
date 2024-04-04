@@ -7,7 +7,7 @@ import { useWallet } from '@suiet/wallet-kit';
 import toast, { Toaster } from 'react-hot-toast';
 
 const NFTMint = () => {
-  const key="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";
+  const key="api";
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
