@@ -4,13 +4,14 @@ import OpenAI from "openai";
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useWallet } from '@suiet/wallet-kit';
+import toast, { Toaster } from 'react-hot-toast';
 
 const NFTMint = () => {
-  var state  = false;
-  const key="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";
+  const key="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";
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
+  const [state, setState] = useState(false);
   const randomNumberInRange = (min, max) => {
     return Math.floor(Math.random()
         * (max - min + 1)) + min;
@@ -20,14 +21,24 @@ const NFTMint = () => {
   const client = new SuiClient({ url: rpcUrl });
 
   async function handleclick(){
-    //state = true;
-    const image = async () => { 
-      const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
-      setData(a.data[0].url);
-      setNum(randomNumberInRange(1, 20));
-      CreateImage("AI_NFT"+num,"Image generateted by for future NFT",a.data[0].url);
-    }
-    image();
+    setState(true);
+    setTimeout(() => {
+      const image = async () => { 
+        try{
+          const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
+          setNum(randomNumberInRange(1, 200));
+          CreateImage("AI_NFT"+num,"Image generateted by for future NFT",a.data[0].url);
+          setData(a.data[0].url);
+          toast.success('Mint NFT success!');
+          setState(false);
+        }
+        catch{
+          toast.error('Limmit access mint NFT for Today!');
+          setState(false);
+        }
+      }
+      image();
+    }, 5000);
   };
 
   useEffect(() => {
@@ -64,6 +75,7 @@ const NFTMint = () => {
   {
     return(
       <div className='bids section__padding'>
+        <div><Toaster position="top-right" reverseOrder={false}/></div>
         <div className="bids-container-text">
           <h1>Congratulations! This is your NFT!</h1>
         </div>
@@ -84,16 +96,23 @@ const NFTMint = () => {
   }
 
   return (
-    <div className='bids section__padding'>
-      <div className="load-more">
-          <div className="bids-container-text">
-            <h1>Click Mint button to mint your own NFT</h1>
-            <div className="load-more">
-              <button disabled={state} onClick={handleclick}>Mint</button>
-            </div>
-          </div>
+    <div className="container">
+      <div className={(state ? 'loader-container' : '')}>
+
       </div>
-    </div>  
+      <div className='bids section__padding'>
+        <div><Toaster position="top-right" reverseOrder={false}/></div>
+        <div className="load-more">
+            <div className="bids-container-text">
+                <h1>Click Mint button to mint your own NFT</h1>
+                <div className="load-more">
+                  <button disabled={state} onClick={handleclick}>Mint</button>
+                </div>
+              </div>
+          </div>
+      </div>  
+    </div>
+   
   )
 }
 
