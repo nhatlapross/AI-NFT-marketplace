@@ -122,11 +122,11 @@ module contract::four_future_nft {
     }
 
     public fun likeNFT(nft: &mut FourFutureNFT) {
+        nft.price = nft.price + 1;
+
         event::emit(NFTLiked {
             price_updated: nft.price
         });
-
-        nft.price = nft.price + 1
     }
 
     /// Update the `description` of `nft` to `new_description`
