@@ -14,6 +14,8 @@ module contract::four_future_nft {
         description: string::String,
         /// URL for the token
         url: Url,
+        /// Price for the token
+        price: u64,
     }
 
     struct NFTMinted has copy, drop {
@@ -36,6 +38,10 @@ module contract::four_future_nft {
         sender_nft: address,
         // The receive of the NFT
         receive: address,
+    }
+
+    struct NFTLiked has copy, drop {
+        price_updated: u64
     }
 
     struct NFTDescriptionUpdated has copy, drop {
@@ -64,6 +70,11 @@ module contract::four_future_nft {
         &nft.url
     }
 
+    /// Get the NFT's `price`
+    public fun price(nft: &FourFutureNFT): &u64 {
+        &nft.price
+    }
+
     // ===== Entrypoints =====
 
     /// Create a new fourfuture_nft
@@ -71,7 +82,7 @@ module contract::four_future_nft {
         name: vector<u8>,
         description: vector<u8>,
         url: vector<u8>,
-        ctx: &mut TxContext
+        ctx: &mut TxContext,
     ) {
 
         let sender = tx_context::sender(ctx);
@@ -79,7 +90,8 @@ module contract::four_future_nft {
             id: object::new(ctx),
             name: string::utf8(name),
             description: string::utf8(description),
-            url: url::new_unsafe_from_bytes(url)
+            url: url::new_unsafe_from_bytes(url),
+            price: _
         };
 
         event::emit(NFTMinted {
@@ -109,6 +121,14 @@ module contract::four_future_nft {
         transfer::public_transfer(nft, recipient)
     }
 
+    public fun likeNFT(nft: &mut FourFutureNFT) {
+        event::emit(NFTLiked {
+            price_updated: nft.price
+        });
+
+        nft.price = nft.price + 1
+    }
+
     /// Update the `description` of `nft` to `new_description`
     public fun update_description(
         nft: &mut FourFutureNFT,
@@ -129,7 +149,7 @@ module contract::four_future_nft {
 
      /// Permanently delete `nft`
     public fun burn(nft: FourFutureNFT, _: &mut TxContext) {
-        let FourFutureNFT { id, name: _, description: _, url: _ } = nft;
+        let FourFutureNFT { id, name: _, description: _, url: _ , price: _} = nft;
         object::delete(id)
     } 
 
