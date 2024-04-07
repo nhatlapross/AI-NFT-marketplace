@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="footer-links_logo">
         <div>
           <img src={nftlogo} alt="logo" />
-          <p>Team Camb</p>
+          <p>4F TEAM</p>
         </div>
         <div>
           <h3>Get the lastes Updates</h3>
@@ -22,7 +22,7 @@ const Footer = () => {
         </div>
         </div>
         <div className="footer-links_div">
-          <h4>Team Camb</h4>
+          <h4>4F TEAM</h4>
           <p>Explore</p>
           <p>How it Works</p>
           <p>Counters</p>
