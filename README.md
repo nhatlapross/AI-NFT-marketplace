@@ -31,9 +31,9 @@ sui client call --package 0x6d0789d49c77d321a9c07ee881eae608b1b710e9b14c691b8aa0
 
 #Giai đoạn 2
 - Trang explore tạo tab phân ra 3 mục:
-  + Tất cả NFT
-  + NFT for Vote => mỗi lần kí thì NFT tăng 1 SUI
-  + NFT for Sale => khi người mua mua NFT đã được bán với giá được định sẵn thì số tiền (SUI) sẽ được gửi đến ví người bán và NFT sẽ được gửi đến ví người mua
+  + Tất cả NFT(trạng thái 1 và 2)
+  + NFT for Vote(trạng thái 1) => mỗi lần kí thì NFT tăng 1 SUI
+  + NFT for Sale (trạng thái 2) => khi người mua mua NFT đã được bán với giá được định sẵn thì số tiền (SUI) sẽ được gửi đến ví người bán và NFT sẽ được gửi đến ví người mua
 - Phân trang hiển thị NFT (Chỉnh sửa kích thước cố định cho ảnh trong card để tránh bị nhảy hàng), 1 trang hiển thị 10 NFT
 - market place contract gồm các tính năng List NFT, bán NFT, mua NFT, cho thuê NFT, vote NFT
 - Trang chi tiết item trong explore
