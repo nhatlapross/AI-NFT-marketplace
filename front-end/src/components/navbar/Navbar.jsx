@@ -8,7 +8,7 @@ const Menu = () => (
   <>
      <Link to="/"><p>Explore</p> </Link>
      <Link to="/Mint"><p>Mint</p> </Link>
-     <Link to="/MyItems"><p>My Items</p> </Link>
+     <Link to="/ItemOwner"><p>My Items</p> </Link>
   </>
  )
 
@@ -29,7 +29,7 @@ const Menu = () => (
         <div className="navbar-links_logo">
           <img src={logo} alt="logo" />
           <Link to="/"> 
-            <h1>Team Camb</h1>
+            <h1>4F TEAM</h1>
           </Link>
         </div>
         <div className="navbar-links_container">
