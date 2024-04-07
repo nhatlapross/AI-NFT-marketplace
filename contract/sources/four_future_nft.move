@@ -44,6 +44,12 @@ module contract::four_future_nft {
         price_updated: u64
     }
 
+    struct NFTNameUpdated has copy, drop {
+        object_id: ID,
+        creator_updated: address,
+        new_name_updated: string::String,
+    }
+
     struct NFTDescriptionUpdated has copy, drop {
         // The Object ID of the NFT
         object_id: ID,
@@ -53,7 +59,23 @@ module contract::four_future_nft {
         new_description_updated: string::String,
     }
 
+    struct NFTUrlUpdated has copy, drop {
+        object_id: ID,
+        creator_updated: address,
+        new_url_updated: Url,
+    }
+
+    struct NFTBurned has copy,drop {
+        object_id: ID,
+        creator_burned: address,
+    }
+
     // ===== Public view functions =====
+
+    /// Get the NFT's `ID`
+    public fun id(nft: &FourFutureNFT): &UID {
+        &nft.id
+    }
 
     /// Get the NFT's `name`
     public fun name(nft: &FourFutureNFT): &string::String {
@@ -91,7 +113,7 @@ module contract::four_future_nft {
             name: string::utf8(name),
             description: string::utf8(description),
             url: url::new_unsafe_from_bytes(url),
-            price: _
+            price: 0
         };
 
         event::emit(NFTMinted {
@@ -121,12 +143,30 @@ module contract::four_future_nft {
         transfer::public_transfer(nft, recipient)
     }
 
-    public fun likeNFT(nft: &mut FourFutureNFT) {
+    public fun like_nft(nft: &mut FourFutureNFT) {
         nft.price = nft.price + 1;
 
         event::emit(NFTLiked {
             price_updated: nft.price
         });
+    }
+
+    public fun update_name(
+        nft: &mut FourFutureNFT, 
+        new_name: vector<u8>, 
+        ctx: &mut TxContext
+    ) {
+
+        let sender = tx_context::sender(ctx);
+
+        event::emit(NFTNameUpdated {
+            object_id: object::id(nft),
+            creator_updated: sender,
+            new_name_updated: string::utf8(new_name)
+        });
+
+        nft.name = string::utf8(new_name)        
+        
     }
 
     /// Update the `description` of `nft` to `new_description`
@@ -147,9 +187,38 @@ module contract::four_future_nft {
         nft.description = string::utf8(new_description)
     }
 
+    public fun update_url(
+        nft: &mut FourFutureNFT,
+        new_url: vector<u8>,
+        ctx: &mut TxContext
+    ) {
+
+        let sender = tx_context::sender(ctx);
+
+        event::emit(NFTUrlUpdated {
+            object_id: object::id(nft),
+            creator_updated: sender,
+            new_url_updated: url::new_unsafe_from_bytes(new_url)
+        });
+
+        nft.url = url::new_unsafe_from_bytes(new_url)
+    }
+
      /// Permanently delete `nft`
-    public fun burn(nft: FourFutureNFT, _: &mut TxContext) {
-        let FourFutureNFT { id, name: _, description: _, url: _ , price: _} = nft;
+    public fun burn(
+        nft: &mut FourFutureNFT, 
+        nft_burn: FourFutureNFT, 
+        ctx: &mut TxContext
+    ) {
+
+        let sender = tx_context::sender(ctx);
+
+        event::emit(NFTBurned {
+            object_id: object::id(nft),
+            creator_burned: sender
+        });
+
+        let FourFutureNFT { id, name: _, description: _, url: _ , price: _} = nft_burn;
         object::delete(id)
     } 
 
