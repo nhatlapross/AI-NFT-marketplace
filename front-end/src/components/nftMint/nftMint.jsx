@@ -1,69 +1,118 @@
 import React, { useState,useEffect } from 'react'
 import './nftMint.css'
 import OpenAI from "openai";
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useWallet } from '@suiet/wallet-kit';
+import toast, { Toaster } from 'react-hot-toast';
+import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
+import * as moment from 'moment';
+import * as constant from '../../constant/constant';
 
 const NFTMint = () => {
-  var state  = false;
-  const key="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";
+  const key=constant.OpenAIKey;
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
+  const [state, setState] = useState(false);
   const randomNumberInRange = (min, max) => {
     return Math.floor(Math.random()
         * (max - min + 1)) + min;
   };
   const wallet = useWallet();
+  const packageObjectId = constant.packageObjectId;
+  const moduleName = constant.moduleName;
   const rpcUrl = getFullnodeUrl('devnet');
   const client = new SuiClient({ url: rpcUrl });
+  const [res, setRes] = useState(null);
+  const [urlEx, seturlEx] = useState(null);
 
   async function handleclick(){
-    //state = true;
-    const image = async () => { 
-      const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
-      setData(a.data[0].url);
-      setNum(randomNumberInRange(1, 20));
-      CreateImage("AI_NFT"+num,"Image generateted by for future NFT",a.data[0].url);
-    }
-    image();
+    let time = new Date();
+    let formattedDate = (moment(time)).format('YYYYMMDDHHmmss')
+    setState(true);
+    setTimeout(() => {
+      const image = async () => { 
+        try{
+          const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
+          setNum(randomNumberInRange(1, 200));
+          CreateImage("AI_NFT#"+formattedDate,"Image generateted by for future NFT",a.data[0].url);
+          //setData(a.data[0].url);
+          toast.success('Mint NFT success!');
+          setState(false);
+        }
+        catch{
+          setNum(randomNumberInRange(1, 200));
+          CreateImage("AI_NFT#"+formattedDate,"MEME created by for future NFT",constant.defaultImgURL);
+          //setData(constant.defaultImgURL);
+          toast.error('Limmit access mint NFT for Today!');
+        }
+      }
+      image();
+    }, 100);
   };
 
   useEffect(() => {
     if (!wallet.connected) return;
-    console.log('connected wallet name: ', wallet.name)
-    console.log('account address: ', wallet.account?.address)
-    console.log('account publicKey: ', wallet.account?.publicKey)
+    // console.log('connected wallet name: ', wallet.name)
+    // console.log('account address: ', wallet.account?.address)
+    // console.log('account publicKey: ', wallet.account?.publicKey)
+    if(!res){
+      getRespond();
+    }
   }, [wallet.connected])
 
+  useEffect(() => {
+      getRespond();
+  }, [res])
+
+  async function getRespond(){
+      const event = await client.call('sui_getEvents', [res.digest]);
+      console.log(event);
+      const idObj = event[0].parsedJson.object_id;
+      seturlEx(constant.suiExploreLink+idObj);
+  }
+
   async function CreateImage(name,text,url) {
+    // let unsubscribe = await client.subscribeEvent({
+    //     filter: { Package: packageObjectId },
+    //     onMessage: (event) => {
+    //         console.log("subscribeEvent", JSON.stringify(event, null, 2))
+    //     }
+    // });
+    // const committeeInfo = await client.call('suix_getOwnedObjects', [wallet.account?.address]);
+    // console.log(committeeInfo);
+    // setState(false);
+    // return
+
     const tx = new TransactionBlock();
-    const packageObjectId = "0x84cd2f10ccc37b0fc959c0df567d21ff24658674dd89de13ca6f06bf2b3b0265";
     tx.moveCall({
-      target: `${packageObjectId}::four_future_nft::mint_to_sender`,
+      target: `${packageObjectId}::${moduleName}::mint_to_sender`,
       arguments: [tx.pure(name),tx.pure(text),tx.pure(url)],
     });
-    const res = await wallet.signAndExecuteTransactionBlock({
-      transactionBlock: tx,
-    });
-    console.log(res);
+    try{
+      const respond = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+      });
+      console.log(respond);
+      setRes(respond);
+      setState(false);
+      setData(constant.defaultImgURL);
+    }
+    catch{
+      setState(false);
+    }
   }
 
   async function tryclick(){
     setData(null);
   };
 
-  async function handleSignMessage() {
-    await wallet.signPersonalMessage({
-      message: new TextEncoder().encode("Hello World"),
-    });
-  }
 
   if(data!= null)
   {
     return(
       <div className='bids section__padding'>
+        <div><Toaster position="top-right" reverseOrder={false}/></div>
         <div className="bids-container-text">
           <h1>Congratulations! This is your NFT!</h1>
         </div>
@@ -75,6 +124,7 @@ const NFTMint = () => {
                 </div>
               </div>
             </div>
+            <div><a href={urlEx}>Click to see NFT in SUI Explore</a></div>
           </div>
           <div className="load-more">
               <button disabled={state} onClick={tryclick}>Try Again</button>
@@ -84,16 +134,23 @@ const NFTMint = () => {
   }
 
   return (
-    <div className='bids section__padding'>
-      <div className="load-more">
-          <div className="bids-container-text">
-            <h1>Click Mint button to mint your own NFT</h1>
-            <div className="load-more">
-              <button disabled={state} onClick={handleclick}>Mint</button>
-            </div>
-          </div>
+    <div className="container">
+      <div className={(state ? 'loader-container' : '')}>
+
       </div>
-    </div>  
+      <div className='bids section__padding'>
+        <div><Toaster position="top-right" reverseOrder={false}/></div>
+        <div className="load-more">
+            <div className="bids-container-text">
+                <h1>Click Mint button to mint your own NFT</h1>
+                <div className="load-more">
+                  <button disabled={state} onClick={handleclick}>Mint</button>
+                </div>
+              </div>
+          </div>
+      </div>  
+    </div>
+   
   )
 }
 
