@@ -5,9 +5,12 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useWallet } from '@suiet/wallet-kit';
 import toast, { Toaster } from 'react-hot-toast';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
+import * as moment from 'moment';
+import * as constant from '../../constant/constant';
 
 const NFTMint = () => {
-  const key="api";
+  const key=constant.OpenAIKey;
+
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
@@ -17,27 +20,35 @@ const NFTMint = () => {
         * (max - min + 1)) + min;
   };
   const wallet = useWallet();
-  const packageObjectId = "0x84cd2f10ccc37b0fc959c0df567d21ff24658674dd89de13ca6f06bf2b3b0265";
-  const moduleName = "four_future_nft";
+  const packageObjectId = constant.packageObjectId;
+  const moduleName = constant.moduleName;
+
   const rpcUrl = getFullnodeUrl('devnet');
   const client = new SuiClient({ url: rpcUrl });
+  const [res, setRes] = useState(null);
+  const [urlEx, seturlEx] = useState(null);
 
   async function handleclick(){
+    let time = new Date();
+    let formattedDate = (moment(time)).format('YYYYMMDDHHmmss')
+
     setState(true);
     setTimeout(() => {
       const image = async () => { 
         try{
           const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
           setNum(randomNumberInRange(1, 200));
-          CreateImage("AI_NFT"+num,"Image generateted by for future NFT",a.data[0].url);
+          CreateImage("AI_NFT#"+formattedDate,"Image generateted by for future NFT",a.data[0].url);
+
           //setData(a.data[0].url);
           toast.success('Mint NFT success!');
           setState(false);
         }
         catch{
           setNum(randomNumberInRange(1, 200));
-          CreateImage("AI_NFT"+num,"MEME created by for future NFT","https://th.bing.com/th/id/OIP.eFAj7sVAyYiIDJU60PtUVwHaHa?rs=1&pid=ImgDetMain");
-          //setData("https://bizweb.dktcdn.net/100/438/408/files/meme-meo-cute-yody-vn-81.jpg?v=1690276185121");
+          CreateImage("AI_NFT#"+formattedDate,"MEME created by for future NFT",constant.defaultImgURL);
+          //setData(constant.defaultImgURL);
+
           toast.error('Limmit access mint NFT for Today!');
         }
       }
@@ -50,7 +61,22 @@ const NFTMint = () => {
     // console.log('connected wallet name: ', wallet.name)
     // console.log('account address: ', wallet.account?.address)
     // console.log('account publicKey: ', wallet.account?.publicKey)
+    if(!res){
+      getRespond();
+    }
+
   }, [wallet.connected])
+
+  useEffect(() => {
+      getRespond();
+  }, [res])
+
+  async function getRespond(){
+      const event = await client.call('sui_getEvents', [res.digest]);
+      console.log(event);
+      const idObj = event[0].parsedJson.object_id;
+      seturlEx(constant.suiExploreLink+idObj);
+  }
 
   async function CreateImage(name,text,url) {
     // let unsubscribe = await client.subscribeEvent({
@@ -70,12 +96,13 @@ const NFTMint = () => {
       arguments: [tx.pure(name),tx.pure(text),tx.pure(url)],
     });
     try{
-      const res = await wallet.signAndExecuteTransactionBlock({
+      const respond = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
       });
-      console.log(res);
+      console.log(respond);
+      setRes(respond);
       setState(false);
-      setData("https://th.bing.com/th/id/OIP.eFAj7sVAyYiIDJU60PtUVwHaHa?rs=1&pid=ImgDetMain");
+      setData(constant.defaultImgURL);
     }
     catch{
       setState(false);
@@ -103,6 +130,7 @@ const NFTMint = () => {
                 </div>
               </div>
             </div>
+            <div><a href={urlEx}>Click to see NFT in SUI Explore</a></div>
           </div>
           <div className="load-more">
               <button disabled={state} onClick={tryclick}>Try Again</button>

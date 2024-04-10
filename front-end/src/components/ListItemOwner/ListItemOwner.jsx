@@ -53,7 +53,7 @@ const ListItemOwner = () => {
               <div className="bids-card">
                 <div className="bids-card-top">
                   <img className="photo" src={d.url} alt="" />
-                  <Link to={d.id.id}>
+                  <Link to={`/DetailItemOwner/`+(d.id.id)}>
                     <p className="bids-title">{d.name}</p>
                   </Link>
                 </div>
