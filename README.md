@@ -29,7 +29,7 @@ sui client call --package 0x84cd2f10ccc37b0fc959c0df567d21ff24658674dd89de13ca6f
 - sui transfer nft
 sui client call --package 0x6d0789d49c77d321a9c07ee881eae608b1b710e9b14c691b8aa044118d4f0ad6 --module four_future_nft --function transfer --args 0xd3093e97245117a6dd586b8d8a56cef2ae64ce3906939803d0c1ed414f77d992 0xb021e9236da30c1564771893349d7fc4b83007e108636235bd3b89c893d313cb --gas-budget 500000000
 
-#Giai đoạn 2
+# Giai đoạn 2
 - Trang explore tạo tab phân ra 3 mục:
   + Tất cả NFT(trạng thái 1 và 2)
   + NFT for Vote(trạng thái 1) => mỗi lần kí thì NFT tăng 1 SUI
