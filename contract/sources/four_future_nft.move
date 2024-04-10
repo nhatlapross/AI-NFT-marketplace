@@ -1,15 +1,13 @@
 module contract::four_future_nft {
-    use sui::url::{Self, Url};
     use std::string;
-    use std::string::{utf8}; 
+    use sui::url::{Self, Url};
     use sui::object::{Self, ID, UID};
+    use sui::tx_context::{Self, TxContext};
     use sui::event;
     use sui::transfer;
-    use sui::tx_context::{sender, TxContext};
-    use sui::package; // For publishing NFT
-    use sui::display; // For displaying NFT image
 
-    
+    const ENotStateOne: u64 = 1;
+
     // Struct represent the NFT item
     struct FourFutureNFT has key, store {
         id: UID,
@@ -20,9 +18,7 @@ module contract::four_future_nft {
         /// URL for the token
         url: Url,
         /// State field with values 0, 1, 2
-        state: u8,
-        /// Price for the token
-        price: u64,
+        state: u64,
     }
     
     struct NFTMinted has copy, drop {
@@ -45,10 +41,6 @@ module contract::four_future_nft {
         sender_nft: address,
         // The receive of the NFT
         receive: address,
-    }
-
-    struct NFTLiked has copy, drop {
-        price_updated: u64
     }
 
     struct NFTDescriptionUpdated has copy, drop {
@@ -88,13 +80,8 @@ module contract::four_future_nft {
     }
 
     /// Get the NFT's `state`
-    public fun state(nft: &FourFutureNFT): &u8 {
+    public fun state(nft: &FourFutureNFT): &u64 {
         &nft.state
-    }
-
-    /// Get the NFT's `price`
-    public fun price(nft: &FourFutureNFT): &u64 {
-        &nft.price
     }
 
     // ===== Entrypoints =====
@@ -107,14 +94,13 @@ module contract::four_future_nft {
         ctx: &mut TxContext,
     ) {
 
-        let sender = sender(ctx);
+        let sender = tx_context::sender(ctx);
         let nft = FourFutureNFT {
             id: object::new(ctx),
             name: string::utf8(name),
             description: string::utf8(description),
             url: url::new_unsafe_from_bytes(url),
             state: 0,
-            price: 0
         };
 
         event::emit(NFTMinted {
@@ -135,7 +121,7 @@ module contract::four_future_nft {
         ctx: &mut TxContext
     ) {
 
-        let sender = sender(ctx);
+        let sender = tx_context::sender(ctx);
 
         event::emit(NFTTransfered {
             object_id: object::id(&nft),
@@ -146,101 +132,17 @@ module contract::four_future_nft {
         transfer::public_transfer(nft, recipient)
     }
 
-    /// Like NFT increase one to price  
-    public fun like_nft(nft: &mut FourFutureNFT) {
-        nft.price = nft.price + 1;
-
-        event::emit(NFTLiked {
-            price_updated: nft.price
-        });
+    public fun check_state_one(nft: &mut FourFutureNFT) {
+        assert!(nft.state == 1, ENotStateOne);
     }
 
     /// Change the state of an NFT
-    public fun change_state(nft: &mut FourFutureNFT, new_state: u8) {
+    public fun change_state(nft: &mut FourFutureNFT, new_state: u64) {
         // Ensure the new state is valid (0, 1, or 2)
-        assert!(new_state == 0 || new_state == 1 || new_state == 2, 0);
+        assert!(new_state == 0 || new_state == 1 || new_state == 2, 1);
 
         // Change the state of the NFT
         nft.state = new_state;
-    }
-
-    // For displaying NFT image
-    struct NFT_PRESS has drop {}
-    
-    // Publish NFT
-    public fun publish_nft(otw: NFT_PRESS, ctx: &mut TxContext) {
-        let keys = vector[
-            utf8(b"name"),
-            utf8(b"description"),
-            utf8(b"url"),
-            utf8(b"state"),
-            utf8(b"price"),
-        ];
-
-        let values = vector[
-            utf8(b"name"),
-            utf8(b"description"),
-            utf8(b"url"),
-            utf8(b"state"),
-            utf8(b"price"),
-        ];
-
-        // Claim the publisher
-        let publisher = package::claim(otw, ctx);
-
-        let display = display::new_with_fields<FourFutureNFT>(
-            &publisher, keys, values, ctx 
-        );
-
-        display::update_version(&mut display);
-
-        // Publish the NFT
-        transfer::public_transfer(publisher, sender(ctx));
-        transfer::public_transfer(display, sender(ctx));
-    }
-    
-    // Publish NFT and change to state 1 or 2
-    public fun change_state_publish_nft(
-        otw: NFT_PRESS, 
-        ctx: &mut TxContext, 
-        nft: &mut FourFutureNFT, 
-        new_state: u8
-    ) {
-       
-        // Ensure the new state is valid (1, or 2)
-        assert!(new_state == 1 || new_state == 2, 0);
-
-        // Change the state of the NFT
-        nft.state = new_state;
-
-        let keys = vector[
-            utf8(b"name"),
-            utf8(b"description"),
-            utf8(b"url"),
-            utf8(b"state"),
-            utf8(b"price"),
-        ];
-
-        let values = vector[
-            utf8(b"name"),
-            utf8(b"description"),
-            utf8(b"url"),
-            utf8(b"state"),
-            utf8(b"price"),
-        ];
-
-        // Claim the publisher
-        let publisher = package::claim(otw, ctx);
-
-        let display = display::new_with_fields<FourFutureNFT>(
-            &publisher, keys, values, ctx 
-        );
-
-        display::update_version(&mut display);
-
-        // Publish the NFT
-        transfer::public_transfer(publisher, sender(ctx));
-        transfer::public_transfer(display, sender(ctx));
     }
 
     /// Update the `description` of `nft` to `new_description`
@@ -250,7 +152,7 @@ module contract::four_future_nft {
         ctx: &mut TxContext
     ) {
 
-        let sender = sender(ctx);
+        let sender = tx_context::sender(ctx);
 
         event::emit(NFTDescriptionUpdated {
             object_id: object::id(nft),
@@ -268,14 +170,14 @@ module contract::four_future_nft {
         ctx: &mut TxContext
     ) {
 
-        let sender = sender(ctx);
+        let sender = tx_context::sender(ctx);
 
         event::emit(NFTBurned {
             object_id: object::id(nft),
             creator_burned: sender
         });
 
-        let FourFutureNFT { id, name: _, description: _, url: _ , state: _, price: _} = nft_burn;
+        let FourFutureNFT { id, name: _, description: _, url: _ , state: _} = nft_burn;
         object::delete(id)
     } 
 
