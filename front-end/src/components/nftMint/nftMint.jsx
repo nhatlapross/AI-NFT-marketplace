@@ -10,6 +10,7 @@ import * as constant from '../../constant/constant';
 
 const NFTMint = () => {
   const key=constant.OpenAIKey;
+
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
@@ -21,6 +22,7 @@ const NFTMint = () => {
   const wallet = useWallet();
   const packageObjectId = constant.packageObjectId;
   const moduleName = constant.moduleName;
+
   const rpcUrl = getFullnodeUrl('devnet');
   const client = new SuiClient({ url: rpcUrl });
   const [res, setRes] = useState(null);
@@ -29,6 +31,7 @@ const NFTMint = () => {
   async function handleclick(){
     let time = new Date();
     let formattedDate = (moment(time)).format('YYYYMMDDHHmmss')
+
     setState(true);
     setTimeout(() => {
       const image = async () => { 
@@ -36,6 +39,7 @@ const NFTMint = () => {
           const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
           setNum(randomNumberInRange(1, 200));
           CreateImage("AI_NFT#"+formattedDate,"Image generateted by for future NFT",a.data[0].url);
+
           //setData(a.data[0].url);
           toast.success('Mint NFT success!');
           setState(false);
@@ -44,6 +48,7 @@ const NFTMint = () => {
           setNum(randomNumberInRange(1, 200));
           CreateImage("AI_NFT#"+formattedDate,"MEME created by for future NFT",constant.defaultImgURL);
           //setData(constant.defaultImgURL);
+
           toast.error('Limmit access mint NFT for Today!');
         }
       }
@@ -59,6 +64,7 @@ const NFTMint = () => {
     if(!res){
       getRespond();
     }
+
   }, [wallet.connected])
 
   useEffect(() => {
