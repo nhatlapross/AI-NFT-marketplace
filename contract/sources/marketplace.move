@@ -1,5 +1,5 @@
 module contract::marketplace {
-    use contract::four_future_nft::{FourFutureNFT, check_state_one, change_state};
+    use contract::four_future_nft::{FourFutureNFT, check_state_one};
     use sui::dynamic_object_field as ofield;
     use sui::tx_context::{Self, TxContext};
     use sui::object::{Self, ID, UID};
@@ -45,13 +45,10 @@ module contract::marketplace {
     /// List an item at the Marketplace.
     public fun list<T: key + store, COIN>(
         marketplace: &mut Marketplace<COIN>,
-        nft: &mut FourFutureNFT,
         item: T,
         ask: u64,
-        new_state: u64,
         ctx: &mut TxContext
     ) {
-        change_state(nft, new_state);
         let item_id = object::id(&item);
         let listing = Listing {
             ask,
