@@ -44,4 +44,24 @@ sui client call --package 0x6d0789d49c77d321a9c07ee881eae608b1b710e9b14c691b8aa0
   + Cập nhật mô tả ở trang my item và trang mint 
   + tính năng transfer NFT sang ví khác
   + burn NFT
+# Dynamic Object Field
+Listing {
+   ID
+   IDNFT
+   price
+   state
+   item => NFT
+   owneraddress
+}
+
+ChangeState(address_Sender,listing,Newstate){
+   addressSender == owneraddress => event
+   listing.state = Newstate
+}
+
+ChangePrice(listing){
+   listing.state != 1 => event
+   listing.price += 1
+}
+
  
