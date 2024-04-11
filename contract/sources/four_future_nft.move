@@ -52,11 +52,6 @@ module contract::four_future_nft {
         new_description_updated: string::String,
     }
 
-    struct NFTBurned has copy,drop {
-        object_id: ID,
-        creator_burned: address,
-    }
-
     // ===== Public view functions =====
 
     /// Get the NFT's `ID`
@@ -165,17 +160,9 @@ module contract::four_future_nft {
 
      /// Permanently delete `nft`
     public fun burn(
-        nft: &mut FourFutureNFT, 
         nft_burn: FourFutureNFT, 
-        ctx: &mut TxContext
+        _: &mut TxContext
     ) {
-
-        let sender = tx_context::sender(ctx);
-
-        event::emit(NFTBurned {
-            object_id: object::id(nft),
-            creator_burned: sender
-        });
 
         let FourFutureNFT { id, name: _, description: _, url: _ , state: _} = nft_burn;
         object::delete(id)
