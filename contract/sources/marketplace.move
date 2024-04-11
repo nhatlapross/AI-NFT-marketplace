@@ -1,5 +1,4 @@
 module contract::marketplace {
-    use contract::four_future_nft::{FourFutureNFT, check_state_one};
     use sui::dynamic_object_field as ofield;
     use sui::tx_context::{Self, TxContext};
     use sui::object::{Self, ID, UID};
@@ -7,11 +6,15 @@ module contract::marketplace {
     use sui::bag::{Bag, Self};
     use sui::table::{Table, Self};
     use sui::transfer;
+    use sui::event;
 
     /// For when amount paid does not match the expected.
     const EAmountIncorrect: u64 = 0;
     /// For when someone tries to delist without ownership.
     const ENotOwner: u64 = 1;
+
+    const EStateIncorrect: u64 = 1;
+    
 
     /// A shared `Marketplace`. Can be created by anyone using the
     /// `create` function. One instance of `Marketplace` accepts
@@ -26,8 +29,18 @@ module contract::marketplace {
     /// price in [`Coin<COIN>`].
     struct Listing has key, store {
         id: UID,
-        ask: u64,
         owner: address,
+        state: u64,
+        price: u64,
+    }
+
+    struct ChangeState has copy, drop {
+        sender_change: address,
+        state: u64,
+    }
+
+    struct ChangePrice has copy, drop {
+        sender_change: address,
     }
 
     /// Create a new shared Marketplace.
@@ -46,14 +59,15 @@ module contract::marketplace {
     public fun list<T: key + store, COIN>(
         marketplace: &mut Marketplace<COIN>,
         item: T,
-        ask: u64,
+        price_offer: u64,
         ctx: &mut TxContext
     ) {
         let item_id = object::id(&item);
         let listing = Listing {
-            ask,
             id: object::new(ctx),
             owner: tx_context::sender(ctx),
+            state: 0,
+            price: price_offer,
         };
 
         ofield::add(&mut listing.id, true, item);
@@ -69,7 +83,8 @@ module contract::marketplace {
         let Listing {
             id,
             owner,
-            ask: _,
+            state: _,
+            price: _,
         } = bag::remove(&mut marketplace.items, item_id);
 
         assert!(tx_context::sender(ctx) == owner, ENotOwner);
@@ -99,11 +114,13 @@ module contract::marketplace {
     ): T {
         let Listing {
             id,
-            ask,
-            owner
+            owner,
+            state,
+            price,
         } = bag::remove(&mut marketplace.items, item_id);
-
-        assert!(ask == coin::value(&paid), EAmountIncorrect);
+        
+        assert!(state == 2, EStateIncorrect);
+        assert!(price == coin::value(&paid), EAmountIncorrect);
 
         // Check if there's already a Coin hanging and merge `paid` with it.
         // Otherwise attach `paid` to the `Marketplace` under owner's `address`.
@@ -153,11 +170,52 @@ module contract::marketplace {
             tx_context::sender(ctx)
         )
     }
-    
-    // Increase price one SUI
-    public fun like_nft(nft: &mut FourFutureNFT, list: &mut Listing) {
-        check_state_one(nft);
 
-        list.ask = list.ask + 1
-    }  
+    public fun mutate_state(list: &mut Listing, new_state: u64) {
+        assert!(new_state == 1 || new_state == 2, EStateIncorrect);
+        list.state = new_state;
+    }
+
+    public fun change_state<COIN>(
+        marketplace: &mut Marketplace<COIN>, 
+        child_name: vector<u8>,
+        new_state: u64, 
+        ctx: &mut TxContext
+    ) {
+        let sender = tx_context::sender(ctx);
+        
+        event::emit(ChangeState {
+            sender_change: sender,
+            state: new_state,
+        });
+
+        mutate_state(ofield::borrow_mut<vector<u8>, Listing>(
+            &mut marketplace.id,
+            child_name,
+        ), new_state)
+    }
+
+    public fun mutate_price(list: &mut Listing) {
+        assert!(list.state == 1, EStateIncorrect);
+        list.price = list.price + 1;
+    }
+
+    public fun change_price<COIN>(
+        marketplace: &mut Marketplace<COIN>,
+        child_name: vector<u8>, 
+        ctx: &mut TxContext
+    ) {
+        let sender = tx_context::sender(ctx);
+        
+        event::emit(ChangePrice {
+            sender_change: sender,
+        });
+        
+        mutate_price(ofield::borrow_mut<vector<u8>, Listing>(
+            &mut marketplace.id,
+            child_name,
+        ))
+
+    }
+
 }
