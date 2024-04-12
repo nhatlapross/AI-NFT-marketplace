@@ -77,7 +77,7 @@ module contract::four_future_nft {
 
     // ===== Entrypoints =====
 
-    /// Create a new fourfuture_nft
+    #[allow(lint(self_transfer))]
     public fun mint_to_sender(
         name: vector<u8>,
         description: vector<u8>,
