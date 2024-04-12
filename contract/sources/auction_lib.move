@@ -58,7 +58,8 @@ module contract::auction_lib {
     public fun dereference_u64(ref: &u64): u64 {
         *ref
     }
-
+    
+    #[allow(unused_variable)]
     /// Updates the auction based on the information in the bid
     /// (update auction if higher bid received and send coin back for
     /// bids that are too low).
@@ -114,7 +115,8 @@ module contract::auction_lib {
             }
         }
     }
-
+    
+    #[allow(unused_variable)]
     /// Ends the auction - transfers item to the currently highest
     /// bidder or to the original owner if no bids have been placed.
     fun end_auction<T: key + store>(
@@ -140,7 +142,8 @@ module contract::auction_lib {
             transfer::public_transfer(item, owner);
         };
     }
-
+    
+    #[allow(unused_variable)]
     /// Ends auction and destroys auction object (can only be used if
     /// Auction is single-owner object) - transfers item to the
     /// currently highest bidder or to the original owner if no bids
@@ -148,7 +151,7 @@ module contract::auction_lib {
     public fun end_and_destroy_auction<T: key + store>(
         auction: Auction<T>, ctx: &mut TxContext
     ) {
-        let Auction { id, to_sell, owner, bid_data,set_change } = auction;
+        let Auction { id, to_sell, owner, bid_data, set_change} = auction;
         object::delete(id);
 
         end_auction(&mut to_sell, owner, &mut bid_data, ctx);
