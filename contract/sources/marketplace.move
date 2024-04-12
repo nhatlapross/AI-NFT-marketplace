@@ -15,8 +15,8 @@ module contract::marketplace {
         sender: address,
     }
 
-    public entry fun create_auction<T: key + store>(to_sell: T, ctx: &mut TxContext) {
-        let auction = auction_lib::create_auction(to_sell, ctx);
+    public entry fun create_auction<T: key + store>(to_sell: T,set_change: u64, ctx: &mut TxContext) {
+        let auction = auction_lib::create_auction(to_sell,set_change, ctx);
 
         event::emit(CreateAuction {
             sender: tx_context::sender(ctx)
