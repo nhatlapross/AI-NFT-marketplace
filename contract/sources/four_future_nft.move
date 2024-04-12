@@ -6,8 +6,6 @@ module contract::four_future_nft {
     use sui::event;
     use sui::transfer;
 
-    const ENotStateOne: u64 = 1;
-
     // Struct represent the NFT item
     struct FourFutureNFT has key, store {
         id: UID,
@@ -17,8 +15,6 @@ module contract::four_future_nft {
         description: string::String,
         /// URL for the token
         url: Url,
-        /// State field with values 0, 1, 2
-        state: u64,
     }
     
     struct NFTMinted has copy, drop {
@@ -52,41 +48,36 @@ module contract::four_future_nft {
         new_description_updated: string::String,
     }
 
-    struct NFTBurned has copy,drop {
-        object_id: ID,
+    struct NFTBurned has copy, drop {
+        // The creator update description
         creator_burned: address,
     }
 
     // ===== Public view functions =====
 
     /// Get the NFT's `ID`
-    public fun id(nft: &FourFutureNFT): &UID {
+    public fun get_id(nft: &FourFutureNFT): &UID {
         &nft.id
     }
 
     /// Get the NFT's `name`
-    public fun name(nft: &FourFutureNFT): &string::String {
+    public fun get_name(nft: &FourFutureNFT): &string::String {
         &nft.name
     }
 
     /// Get the NFT's `description`
-    public fun description(nft: &FourFutureNFT): &string::String {
+    public fun get_description(nft: &FourFutureNFT): &string::String {
         &nft.description
     }
 
     /// Get the NFT's `url`
-    public fun url(nft: &FourFutureNFT): &Url {
+    public fun get_url(nft: &FourFutureNFT): &Url {
         &nft.url
-    }
-
-    /// Get the NFT's `state`
-    public fun state(nft: &FourFutureNFT): &u64 {
-        &nft.state
     }
 
     // ===== Entrypoints =====
 
-    /// Create a new fourfuture_nft
+    #[allow(lint(self_transfer))]
     public fun mint_to_sender(
         name: vector<u8>,
         description: vector<u8>,
@@ -100,7 +91,6 @@ module contract::four_future_nft {
             name: string::utf8(name),
             description: string::utf8(description),
             url: url::new_unsafe_from_bytes(url),
-            state: 0,
         };
 
         event::emit(NFTMinted {
@@ -132,19 +122,6 @@ module contract::four_future_nft {
         transfer::public_transfer(nft, recipient)
     }
 
-    public fun check_state_one(nft: &mut FourFutureNFT) {
-        assert!(nft.state == 1, ENotStateOne);
-    }
-
-    /// Change the state of an NFT
-    public fun change_state(nft: &mut FourFutureNFT, new_state: u64) {
-        // Ensure the new state is valid (0, 1, or 2)
-        assert!(new_state == 0 || new_state == 1 || new_state == 2, 1);
-
-        // Change the state of the NFT
-        nft.state = new_state;
-    }
-
     /// Update the `description` of `nft` to `new_description`
     public fun update_description(
         nft: &mut FourFutureNFT,
@@ -165,19 +142,17 @@ module contract::four_future_nft {
 
      /// Permanently delete `nft`
     public fun burn(
-        nft: &mut FourFutureNFT, 
         nft_burn: FourFutureNFT, 
         ctx: &mut TxContext
     ) {
-
+        
         let sender = tx_context::sender(ctx);
 
         event::emit(NFTBurned {
-            object_id: object::id(nft),
             creator_burned: sender
         });
 
-        let FourFutureNFT { id, name: _, description: _, url: _ , state: _} = nft_burn;
+        let FourFutureNFT { id, name: _, description: _, url: _ } = nft_burn;
         object::delete(id)
     } 
 
