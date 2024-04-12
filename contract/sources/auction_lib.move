@@ -15,6 +15,8 @@ module contract::auction_lib {
         funds: Balance<SUI>,
         /// Address of the highest bidder.
         highest_bidder: address,
+        //count change of bid
+        change: u64,
     }
 
     /// Maintains the state of the auction owned by a trusted
@@ -29,6 +31,7 @@ module contract::auction_lib {
         owner: address,
         /// Data representing the highest bid (starts with no bid)
         bid_data: Option<BidData>,
+        set_change: u64,
     }
 
     public(friend) fun auction_owner<T: key + store>(auction: &Auction<T>): address {
@@ -38,7 +41,7 @@ module contract::auction_lib {
     /// Creates an auction. This is executed by the owner of the asset to be
     /// auctioned.
     public(friend) fun create_auction<T: key + store>(
-        to_sell: T, ctx: &mut TxContext
+        to_sell: T,set_change:u64, ctx: &mut TxContext
     ): Auction<T> {
         // A question one might asked is how do we know that to_sell
         // is owned by the caller of this entry function and the
@@ -48,7 +51,12 @@ module contract::auction_lib {
             to_sell: option::some(to_sell),
             owner: tx_context::sender(ctx),
             bid_data: option::none(),
+            set_change:set_change,
         }
+    }
+
+    public fun dereference_u64(ref: &u64): u64 {
+        *ref
     }
 
     /// Updates the auction based on the information in the bid
@@ -65,27 +73,41 @@ module contract::auction_lib {
             let bid_data = BidData {
                 funds,
                 highest_bidder: bidder,
+                change: auction.set_change,
             };
             option::fill(&mut auction.bid_data, bid_data);
         } else {
+
             let prev_bid_data = option::borrow(&auction.bid_data);
             if (balance::value(&funds) > balance::value(&prev_bid_data.funds)) {
                 // a bid higher than currently highest bid received
                 let new_bid_data = BidData {
                     funds,
                     highest_bidder: bidder,
+                    change: dereference_u64(&prev_bid_data.change) - 1
                 };
 
+                let s_change = new_bid_data.change;
                 // update auction to reflect highest bid
                 let BidData {
                     funds,
                     highest_bidder,
-                } = option::swap(&mut auction.bid_data, new_bid_data);
+                    change
+                } = option::swap(&mut auction.bid_data,new_bid_data);
 
-                // transfer previously highest bid to its bidder
-                send_balance(funds, highest_bidder, ctx);
-                // end auction send item for bidder
-                end_shared_auction(auction, ctx);                
+                if(s_change == 0)
+                {
+                    // transfer previously highest bid to its bidder
+                    send_balance(funds, highest_bidder, ctx);
+                    // end auction send item for bidder
+                    end_shared_auction(auction, ctx);        
+                }
+                else
+                {
+                    // a bid is too low - return funds to the bidder
+                    send_balance(funds, bidder, ctx);
+                };
+                    
             } else {
                 // a bid is too low - return funds to the bidder
                 send_balance(funds, bidder, ctx);
@@ -108,6 +130,7 @@ module contract::auction_lib {
             let BidData {
                 funds,
                 highest_bidder,
+                change
             } = option::extract(bid_data);
 
             send_balance(funds, owner, ctx);
@@ -125,7 +148,7 @@ module contract::auction_lib {
     public fun end_and_destroy_auction<T: key + store>(
         auction: Auction<T>, ctx: &mut TxContext
     ) {
-        let Auction { id, to_sell, owner, bid_data } = auction;
+        let Auction { id, to_sell, owner, bid_data,set_change } = auction;
         object::delete(id);
 
         end_auction(&mut to_sell, owner, &mut bid_data, ctx);
