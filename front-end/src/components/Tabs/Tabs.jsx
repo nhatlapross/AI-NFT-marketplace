@@ -1,51 +1,34 @@
-import React, { useState } from 'react';
-import { Nav, NavItem, NavLink } from 'react-bootstrap'; // Import Bootstrap components
-import AllNFTs from './AllNFTs'; // Import tab content components
-import NFTsForVote from './NFTsForVote';
-import NFTsForSale from './NFTsForSale';
+import React from "react";
+import { useState } from "react";
+import AllNFTs from "../TabComponents/AllNFTs/AllNFTs";
+import NFTsForVote from "../TabComponents/NFTsForVote/NFTsForVote";
+import NFTsForSale from "../TabComponents/NFTsForSale/NFTsForSale";
 
 const Tabs = () => {
-  const [activeTab, setActiveTab] = useState('all'); // Initial active tab
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const [activeTab, setActiveTab] = useState("tab1");
+  const handleTab1 = () => {
+    setActiveTab("tab1");
+  };
+  const handleTab2 = () => {
+    setActiveTab("tab2");
+  };
+  const handleTab3 = () => {
+    setActiveTab("tab3");
   };
 
-  const renderActiveContent = () => {
-    switch (activeTab) {
-      case 'all':
-        return <AllNFTs />;
-      case 'vote':
-        return <NFTsForVote />;
-      case 'sale':
-        return <NFTsForSale />;
-      default:
-        return null;
-    }
-  };
 
   return (
-    <div className="tabs-container">
-      <Nav variant="tabs" defaultActiveKey="all">
-        <NavItem>
-          <NavLink eventKey="all" onSelect={() => handleTabChange('all')}>
-            Tất cả NFT
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink eventKey="vote" onSelect={() => handleTabChange('vote')}>
-            NFT for Vote
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink eventKey="sale" onSelect={() => handleTabChange('sale')}>
-            NFT for Sale
-          </NavLink>
-        </NavItem>
-      </Nav>
-      <div className="tab-content">{renderActiveContent()}</div>
+    <div className="Tabs">
+      {/* Tab nav */}
+      <ul className="nav">
+        <li className={activeTab === "tab1" ? "active" : ""} onClick={handleTab1}>All NFT</li>
+        <li className={activeTab === "tab2" ? "active" : ""} onClick={handleTab2}>Vote NFT</li>
+        <li className={activeTab === "tab3" ? "active" : ""} onClick={handleTab3}>Sale NFT</li>
+      </ul>
+      <div className="outlet">
+        {activeTab === "tab1" ?   <AllNFTs /> : activeTab === "tab2" ?<NFTsForVote />:<NFTsForSale/>} 
+      </div>
     </div>
   );
 };
-
 export default Tabs;

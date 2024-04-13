@@ -18,8 +18,11 @@ const DetailItemOwner = () => {
   const [transferAddress, settransferAddress] = useState('');
   const packageObjectId = constant.packageObjectId;
   const moduleName = constant.moduleName;
+  const moduleMarketName = constant.moduleMarketName;
   const [res, setRes] = useState(null);
   const [urlEx, seturlEx] = useState(null);
+  const [numAuction,setNumAuction] = useState(null);
+  const [NFTPrice,setNFTPrice] = useState(null);
 
   async function getNFT() {
     const listNFT = [];
@@ -115,6 +118,50 @@ const DetailItemOwner = () => {
     return;
   }
 
+  async function BidNFT(){
+    const tx = new TransactionBlock();
+    tx.moveCall({
+      target: `${packageObjectId}::${moduleMarketName}::create_auction`,
+      typeArguments: [constant.typeArgNFT],
+      arguments: [tx.pure(id),tx.pure(numAuction)],
+    });
+    try{
+      const res = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+      });
+      console.log(res);
+      toast.success('Public to bid success!');
+      window.location.href = window.location.origin + "/ItemOwner";
+    }
+    catch{
+      console.log('error');
+    }
+  }
+
+  async function SaleNFT(){
+    const tx = new TransactionBlock();
+    tx.moveCall({
+      target: `${packageObjectId}::${moduleMarketName}::list`,
+      typeArguments: [constant.typeArgNFT,constant.suiCoin],
+      arguments: [tx.pure(constant.marketID),tx.pure(id),tx.pure(NFTPrice)],
+    });
+    try{
+      const res = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+      });
+      console.log(res);
+      toast.success('Public to sale success!');
+      window.location.href = window.location.origin + "/ItemOwner";
+    }
+    catch{
+      console.log('error');
+    }
+  }
+
+  async function unList(){
+
+  }
+
   async function burn(){
     console.log("burn", id, addressWallet);
     const tx = new TransactionBlock();
@@ -162,15 +209,20 @@ const DetailItemOwner = () => {
                 <p>{d.description}</p>
               </div>
               <div className="item-content-buy">
-                <button style={{ color: 'white' }}  onClick={() => publicNFT(1)} className="primary-btn">Publish for Vote</button>
-                <button style={{ color: 'white' }}  onClick={() => publicNFT(2)} className="primary-btn">Publish for Sale</button>
+                <input type='text' placeholder="Number of auctions"  value={numAuction} onChange={e => setNumAuction(e.target.value)}/>
+                <button  onClick={() => BidNFT()} disabled={numAuction == ""} className={numAuction!=""&&numAuction!=null? "primary-btn":"secondary-btn"}>Bid NFT</button>
               </div>
               <div className="item-content-buy">
-                <input type='text' placeholder="recipient's wallet address"  
-                  value={transferAddress}
-                  onChange={e => settransferAddress(e.target.value)}/>
-                <button onClick={transferTo} className="secondary-btn">Transfer</button>
-                <button style={{ color: 'white' }} onClick={burn} className="primary-btn">Burn</button>
+                <input type='text' placeholder="Price of NFT" value={NFTPrice} onChange={e => setNFTPrice(e.target.value)}/>
+                <button onClick={() => SaleNFT()} disabled={NFTPrice == ""} className={NFTPrice!=""&&NFTPrice!=null? "primary-btn":"secondary-btn"}>List to the Market</button>
+              </div>
+              <div className="item-content-buy">
+                <input type='text' placeholder="recipient's wallet address" value={transferAddress} onChange={e => settransferAddress(e.target.value)}/>
+                <button onClick={transferTo} disabled={transferAddress == ""} className={transferAddress!=""&&transferAddress!=null? "primary-btn":"secondary-btn"}>Transfer</button>
+              </div>
+              <div className="item-content-buy">
+                <button onClick={burn} className="primary-btn">Burn</button>
+                <button onClick={unList} className="primary-btn">UnList</button>
               </div>
             </div>
         </div>

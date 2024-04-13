@@ -16,6 +16,26 @@
   margin-bottom: 1rem;
   text-align: center;
 }
+
+.bids-container-text h6{
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1px;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.bids-container-text a h6 hover{
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1px;
+  color: #696969;
+  text-align: center;
+  background-color: yellow;
+}
+
 .bids-container-card{
   margin: 0 -5px;
   text-align: center;

@@ -85,12 +85,12 @@
   background: var(--primary-btn);
   border-radius: 10px;
   border: none;
-  padding: 0.75rem 3rem;
+  padding: 0.70rem 3rem;
   font-size: 14px;
   line-height: 21px;
   font-weight: 600;
   color: #fff;
-  margin-right: 20px;
+  margin: 30px;
 }
 
 .item-content-buy .secondary-btn{
@@ -160,7 +160,7 @@
     line-height: 24px;
   }
   .item-content-buy .primary-btn{
-    padding: 0.75rem 20px;
+    padding: 0.75rem 33px;
   }
   .item-content-buy .secondary-btn{
     padding: 0.75rem 33px;

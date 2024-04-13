@@ -10,7 +10,6 @@ import * as constant from '../../constant/constant';
 
 const NFTMint = () => {
   const key=constant.OpenAIKey;
-
   const openai = new OpenAI({ apiKey: key , dangerouslyAllowBrowser: true });
   const [data, setData] = useState(null);
   const [num, setNum] = useState(0);
@@ -26,6 +25,7 @@ const NFTMint = () => {
   const rpcUrl = getFullnodeUrl('devnet');
   const client = new SuiClient({ url: rpcUrl });
   const [res, setRes] = useState(null);
+  const [name, setName] = useState(null);
   const [urlEx, seturlEx] = useState(null);
 
   async function handleclick(){
@@ -39,7 +39,7 @@ const NFTMint = () => {
           const a = await openai.images.generate({ prompt: "Creat cute meme or fun meme or fantasy meme" });
           setNum(randomNumberInRange(1, 200));
           CreateImage("AI_NFT#"+formattedDate,"Image generateted by for future NFT",a.data[0].url);
-
+          setName("AI_NFT#"+formattedDate);
           //setData(a.data[0].url);
           toast.success('Mint NFT success!');
           setState(false);
@@ -48,7 +48,7 @@ const NFTMint = () => {
           setNum(randomNumberInRange(1, 200));
           CreateImage("AI_NFT#"+formattedDate,"MEME created by for future NFT",constant.defaultImgURL);
           //setData(constant.defaultImgURL);
-
+          setName("AI_NFT#"+formattedDate);
           toast.error('Limmit access mint NFT for Today!');
         }
       }
@@ -130,7 +130,8 @@ const NFTMint = () => {
                 </div>
               </div>
             </div>
-            <div><a href={urlEx}>Click to see NFT in SUI Explore</a></div>
+            <div className="bids-container-text"><h6>{name}</h6></div>
+            <div className="bids-container-text"><a target='_blank' href={urlEx?urlEx:"https://suiscan.xyz/devnet/object/0xf77cf966a6bdef76960535b5bed9bda035808df68ee404ddfdab68ff4ac4030a"}><h6>Click to see NFT in SUI Explore</h6></a></div>
           </div>
           <div className="load-more">
               <button disabled={state} onClick={tryclick}>Try Again</button>
