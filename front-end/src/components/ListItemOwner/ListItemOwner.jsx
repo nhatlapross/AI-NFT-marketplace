@@ -17,7 +17,7 @@ const ListItemOwner = () => {
   const [passengersData, setpassengersData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [maxPageLimit, setMaxPageLimit] = useState(5);
+  const [maxPageLimit, setMaxPageLimit] = useState(6);
   const [minPageLimit, setMinPageLimit] = useState(0);
   const [totalPage, setTotalPage] = useState(pageNumberLimit);
 
@@ -79,7 +79,7 @@ const ListItemOwner = () => {
     totalPages: totalPage,
     data: passengersData,
     title: "List of My NFTs",
-    type:2,
+    type:3,
   };
   
 

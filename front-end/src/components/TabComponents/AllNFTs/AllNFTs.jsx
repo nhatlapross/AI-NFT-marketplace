@@ -46,7 +46,7 @@ const AllNFTs = () => {
   return (
     <div className="AllNFTTab">
       {/* Filter data based on status (1 and 2) */}
-      <Bids title="ALL NFT" data={data}/>
+      <Bids title="ALL NFT" data={[]} parentID={""}/>
     </div>
   );
 };

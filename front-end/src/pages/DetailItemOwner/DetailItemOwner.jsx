@@ -4,15 +4,12 @@ import creator from '../../assets/seller2.png'
 import { useParams } from 'react-router-dom';
 import { useWallet } from '@suiet/wallet-kit'
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import * as constant from '../../constant/constant';
 import toast, { Toaster } from 'react-hot-toast';
 
 const DetailItemOwner = () => {
   let id = useParams().id;
   const wallet = useWallet();
-  const rpcUrl = getFullnodeUrl('devnet');
-  const client = new SuiClient({ url: rpcUrl });
   const [data, setData] = useState(null);
   const [addressWallet, setAddressWallet] = useState(null);
   const [transferAddress, settransferAddress] = useState('');
@@ -26,7 +23,7 @@ const DetailItemOwner = () => {
 
   async function getNFT() {
     const listNFT = [];
-    const infoObject = await client.call('sui_getObject', [id,{"showContent": true}]);
+    const infoObject = await constant.client.call('sui_getObject', [id,{"showContent": true}]);
     listNFT.push(infoObject.data.content.fields)
     //console.log(infoObject);
     setData(listNFT);
@@ -47,7 +44,7 @@ const DetailItemOwner = () => {
   }, [res])
 
   async function getRespond(){
-      const event = await client.call('sui_getEvents', [res.digest]);
+      const event = await constant.client.call('sui_getEvents', [res.digest]);
       console.log(event);
       const idObj = event[0].parsedJson.object_id;
       seturlEx(constant.suiExploreLink+idObj);
@@ -67,54 +64,11 @@ const DetailItemOwner = () => {
       console.log(respond);
       toast.success('Transfer NFT to'+transferAddress+' success!');
       setRes(respond);
-      // window.location.href = window.location.origin + "/ItemOwner";
+      window.location.href = window.location.origin + "/ItemOwner";
     }
     catch{
       console.log('error');
     }
-    return;
-  }
-
-  async function publicNFT(state){
-    // const event = await client.call('suix_getDynamicFieldObject', 
-    // ['0x162039778306ce510f29e9897c94eac3214b263781089f9ce6f0256a88f9379a',
-    // { "type" : "0x2::dynamic_object_field::Wrapper<bool>",
-    //   "value" : {
-    //     "name":true,
-    // }}]);
-    // console.log(event);
-
-    const event = await client.call('sui_getObject', 
-    ['0x453ba414c6c9c72296bfb5bf93e5e6087e9c3589455cf508d38cd0d5bc0c7bb7',
-    {
-        "showType": true,
-        "showOwner": true,
-        "showPreviousTransaction": true,
-        "showDisplay": true,
-        "showContent": true,
-        "showBcs": true,
-        "showStorageRebate": true 
-    }]);
-    console.log(event);
-
-
-    // console.log("publicForVote", id, addressWallet,state);
-    // const tx = new TransactionBlock();
-    // tx.moveCall({
-    //   target: `${packageObjectId}::${moduleName}::change_state_publish_nft`,
-    //   arguments: [tx.pure(id),tx.pure(state)],
-    // });
-    // try{
-    //   const res = await wallet.signAndExecuteTransactionBlock({
-    //     transactionBlock: tx,
-    //   });
-    //   console.log(res);
-    //   toast.success('Public NFT success!');
-    //   window.location.href = window.location.origin + "/ItemOwner";
-    // }
-    // catch{
-    //   console.log('error');
-    // }
     return;
   }
 
@@ -156,10 +110,6 @@ const DetailItemOwner = () => {
     catch{
       console.log('error');
     }
-  }
-
-  async function unList(){
-
   }
 
   async function burn(){
@@ -212,7 +162,7 @@ const DetailItemOwner = () => {
                 <input type='text' placeholder="Number of auctions"  value={numAuction} onChange={e => setNumAuction(e.target.value)}/>
                 <button  onClick={() => BidNFT()} disabled={numAuction == ""} className={numAuction!=""&&numAuction!=null? "primary-btn":"secondary-btn"}>Bid NFT</button>
               </div>
-              <div className="item-content-buy">
+              <div className="item-content-buy">   
                 <input type='text' placeholder="Price of NFT" value={NFTPrice} onChange={e => setNFTPrice(e.target.value)}/>
                 <button onClick={() => SaleNFT()} disabled={NFTPrice == ""} className={NFTPrice!=""&&NFTPrice!=null? "primary-btn":"secondary-btn"}>List to the Market</button>
               </div>
@@ -222,7 +172,6 @@ const DetailItemOwner = () => {
               </div>
               <div className="item-content-buy">
                 <button onClick={burn} className="primary-btn">Burn</button>
-                <button onClick={unList} className="primary-btn">UnList</button>
               </div>
             </div>
         </div>
