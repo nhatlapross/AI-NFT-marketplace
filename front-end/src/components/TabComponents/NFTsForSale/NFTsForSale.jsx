@@ -1,9 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import Bids from  '../../bids/Bids'; // Import Bids component
-import bids1 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids1.png'
-import bids2 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids2.png'
-import bids3 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids3.png'
-import bids4 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids4.png'
+import bids1 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids1.png'
+import bids2 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids2.png'
+import bids3 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids3.png'
+import bids4 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids4.png'
 import * as constant from '../../../constant/constant';
 
 const data = [

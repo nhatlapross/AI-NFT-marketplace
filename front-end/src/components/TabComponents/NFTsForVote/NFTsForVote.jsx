@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Bids from  '../../bids/Bids';
-import bids1 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids1.png'
-import bids2 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids2.png'
-import bids3 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids3.png'
-import bids4 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids4.png'
-import bids5 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids5.png'
-import bids6 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids6.png'
-import bids7 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids7.png'
-import bids8 from 'F:/SUiProjectV3/AI-NFT-marketplace/front-end/src/assets/bids8.png'
+import bids1 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids1.png'
+import bids2 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids2.png'
+import bids3 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids3.png'
+import bids4 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids4.png'
+import bids5 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids5.png'
+import bids6 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids6.png'
+import bids7 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids7.png'
+import bids8 from '/home/thuanvo/Projects/Web3-Projects/AI-NFT-marketplace/front-end/src/assets/bids8.png'
 
 const data = [
   {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},

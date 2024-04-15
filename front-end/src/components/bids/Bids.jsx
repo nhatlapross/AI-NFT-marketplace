@@ -10,6 +10,7 @@ import bids6 from '../../assets/bids6.png'
 import bids7 from '../../assets/bids7.png'
 import bids8 from '../../assets/bids8.png'
 import Pagination from '../Pagination/Pagination';
+import * as constant from '../../constant/constant.js';
 
 const dataTest = [
   {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
@@ -91,6 +92,14 @@ const Bids = ({ title,data }) => {
   const [minPageLimit, setMinPageLimit] = useState(0);
   const [totalPage, setTotalPage] = useState(pageNumberLimit);
 
+  const [bid, setBid] = useState(null);
+  const [changeData, setChangeData] = useState(0);
+  const [sell, setSell] = useState(null);
+
+  useEffect(() => {
+      LoadNFT()
+  }, []) 
+  
   useEffect(()=>{
     setLoading(true);
     const totalPages = Math.ceil(data.length / maxPageLimit);
@@ -130,6 +139,20 @@ const Bids = ({ title,data }) => {
     title: title,
     type:1,
   };
+
+  async function LoadNFT() {
+    const auctionData = await constant.client.call('sui_getObject', 
+    [
+       constant.auctionID, 
+       {
+        "showType": true,
+        "showOwner": true,
+        "showPreviousTransaction": true,
+        "showContent": true,
+       }
+    ])
+    console.log(auctionData);
+  }
 
   return (
     <container>
