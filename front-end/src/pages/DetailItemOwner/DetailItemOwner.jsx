@@ -76,8 +76,8 @@ const DetailItemOwner = () => {
     const tx = new TransactionBlock();
     tx.moveCall({
       target: `${packageObjectId}::${moduleMarketName}::create_auction`,
-      typeArguments: [constant.typeArgNFT],
-      arguments: [tx.pure(id),tx.pure(numAuction)],
+      typeArguments: [constant.typeArgNFT,constant.suiCoin],
+      arguments: [tx.pure(constant.bidMarketID),tx.pure(id),tx.pure(numAuction)],
     });
     try{
       const res = await wallet.signAndExecuteTransactionBlock({

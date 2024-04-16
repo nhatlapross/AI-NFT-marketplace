@@ -4,14 +4,14 @@ import * as constant from '../../../constant/constant';
 
 const NFTsForVote = () => {
   const [bagData,setBagData] = useState(null);
+  const [auctions,setAuctions] = useState(null);
   useEffect(()=> {
      LoadNFT();
   }, [])
 
-  async function LoadNFT(){
+  useEffect(async()=> {
     const listResData = [];
-    console.log(constant.listAuction);
-    for(const au of constant.listAuction){
+    for(const au of auctions){
       console.log(au);
       const data = await constant.client.call('sui_getObject', 
       [au,
@@ -26,11 +26,19 @@ const NFTsForVote = () => {
     setBagData(listResData);
     console.log(bagData)
 
-    // const t = await constant.client.call('sui_getObject', 
-    // ["0xc8c8fae85a56e1e3120c52f67d953dc3ee21aca6938129992fd064cf84ec6dbc"]);
-    // setBagData(t);
-    // console.log(bagData);
+ }, [auctions])
+
+  async function LoadNFT(){
+    const listAuction = [];
+    const listAu = await constant.client.call('suix_getDynamicFields',[constant.bidMarketBagID]);
+    console.log(listAu);
+    for(const au of listAu.data){
+      listAuction.push(au.name.value);
+      console.log(au);
+    }
+    setAuctions(listAuction);
   }
+
 
   return (
     <div className="NFTVoteTab">

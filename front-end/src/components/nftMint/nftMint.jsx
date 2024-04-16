@@ -172,7 +172,6 @@ const NFTMint = () => {
     setData(null);
   };
 
-
   if(data!= null)
   {
     return(
