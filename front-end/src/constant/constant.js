@@ -9,9 +9,8 @@ export const OpenAIKey="";//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"
 export const defaultImgURL = "https://th.bing.com/th/id/OIP.eFAj7sVAyYiIDJU60PtUVwHaHa?rs=1&pid=ImgDetMain";
 export const suiExploreLink = "https://suiscan.xyz/devnet/object/";
 export const suiCoin = "0x2::sui::SUI";
-export const marketID = "0x57ea15ed039034ac64b9c8e6b8c3007c5308e287fd5f80a2c6eddebaa2ddb3c8";
-export const bagID = "0x54871166e0386660c694cb888ea5c48f863652fd9c0b3601bfdd0ace12a8452b";
-export const auctionID = "0x6791b88628d45ca22a69f5dd917af5674f979607eb2878e3adf9f5ba2d7d9ca0";
+export const marketID = "0xe65f96fe5f343936c3c6fb3ec2536c982d485a1e7533d7276b70a34ea6fa71f6";
+export const bagID ="0xc61940851ca41571fbc72ac143d964410875d08ab707da992616a91c6b7f1c78";
 export const typeArgNFT = packageObjectId+"::"+ moduleName+"::"+"FourFutureNFT";
 export const rpcUrl = getFullnodeUrl('devnet');
 export const client = new SuiClient({ url: rpcUrl });

@@ -2,78 +2,9 @@ import React, { useState,useEffect } from 'react'
 import './bids.css'
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import Pagination from '../Pagination/Pagination';
+import * as constant from '../../constant/constant';
 
-const dataTest = [
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-   {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-  {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
-  {name:"Mountain Landscape",price:50,like:100,img:bids2,link:`/item/1`},
-  {name:"Paint Color on Wall",price:60,like:102,img:bids3,link:`/item/2`},
-  {name:"Abstract Patern",price:70,like:75,img:bids4,link:`/item/3`},
-  {name:"White Line Grafiti",price:80,like:60,img:bids5,link:`/item/4`},
-  {name:"Abstract Triangle",price:90,like:5,img:bids6,link:`/item/5`},
-  {name:"Lake Landscape",price:53,like:52,img:bids7,link:`/item/6`},
-  {name:"Blue Red Art",price:51,like:51,img:bids8,link:`/item/7`},
-]
-
-const Bids = ({ title,data }) => {
+const Bids = ({ title,data,parentID,status }) => {
 
   const pageNumberLimit = 100;
   const [passengersData, setData] = useState([]);
@@ -83,16 +14,51 @@ const Bids = ({ title,data }) => {
   const [minPageLimit, setMinPageLimit] = useState(0);
   const [totalPage, setTotalPage] = useState(pageNumberLimit);
 
-  useEffect(()=>{
-    setLoading(true);
-    const totalPages = Math.ceil(data.length / maxPageLimit);
-    setTotalPage(totalPages);
-    const startIndex = (currentPage - 1) * maxPageLimit;
-    const endIndex = startIndex + maxPageLimit;
-    const currentItems = data.slice(startIndex, endIndex);
-    setData(currentItems);
-    setLoading(false);
-  },[currentPage]);
+  useEffect(async()=>{
+    setTimeout(async() => {
+      setLoading(true);
+      console.log(data);
+      const listResData = [];
+      if(data != null && data.length>0){
+        const startIndex = (currentPage - 1) * maxPageLimit;
+        const endIndex = startIndex + maxPageLimit;
+        const totalPages = Math.ceil(data.length / maxPageLimit);
+        setTotalPage(totalPages);
+        for(const d of data.slice(startIndex, endIndex)){
+          if(status == 1)
+          {
+            const listDetailNFT = await constant.client.call('sui_getObject', [d.name.value,{"showContent": true}]);
+            const price = await constant.client.call('suix_getDynamicFieldObject',[parentID,d.name]);
+            listResData.push({
+              d:listDetailNFT.data.content.fields,
+              p:price.data.content.fields.value.fields
+            });
+          }
+          else
+          {
+            if(d!=null && d.data.content.fields.to_sell != null)
+            {
+              console.log(d);
+              const listDetailNFT = d.data.content.fields.to_sell.fields;              ;
+              listResData.push({
+                d:listDetailNFT,
+                p:{
+                  ask: d.data.content.fields.set_change,
+                  owner: d.data.content.fields.owner,
+                  autionID: d.data.objectId
+                },
+                q:d.data.content.fields.bid_data
+              });
+            }
+           
+          }
+        };
+        setData(listResData);
+        setLoading(false);
+      }
+    }, 100);
+   
+  },[currentPage,data,parentID]);
 
   const onPageChange= (pageNumber)=>{
     setCurrentPage(pageNumber);
@@ -122,20 +88,6 @@ const Bids = ({ title,data }) => {
     title: title,
     type:status,
   };
-
-  async function LoadNFT() {
-    const auctionData = await constant.client.call('sui_getObject', 
-    [
-       constant.auctionID, 
-       {
-        "showType": true,
-        "showOwner": true,
-        "showPreviousTransaction": true,
-        "showContent": true,
-       }
-    ])
-    console.log(auctionData);
-  }
 
   return (
     <container>
