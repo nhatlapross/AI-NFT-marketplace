@@ -1,16 +1,7 @@
 import React, { useState,useEffect } from 'react'
 import './bids.css'
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import bids1 from '../../assets/bids1.png'
-import bids2 from '../../assets/bids2.png'
-import bids3 from '../../assets/bids3.png'
-import bids4 from '../../assets/bids4.png'
-import bids5 from '../../assets/bids5.png'
-import bids6 from '../../assets/bids6.png'
-import bids7 from '../../assets/bids7.png'
-import bids8 from '../../assets/bids8.png'
 import Pagination from '../Pagination/Pagination';
-import * as constant from '../../constant/constant.js';
 
 const dataTest = [
   {name:"Abstact Smoke Red",price:100,like:90,img:bids1,link:`/item/0`},
@@ -92,14 +83,6 @@ const Bids = ({ title,data }) => {
   const [minPageLimit, setMinPageLimit] = useState(0);
   const [totalPage, setTotalPage] = useState(pageNumberLimit);
 
-  const [bid, setBid] = useState(null);
-  const [changeData, setChangeData] = useState(0);
-  const [sell, setSell] = useState(null);
-
-  useEffect(() => {
-      LoadNFT()
-  }, []) 
-  
   useEffect(()=>{
     setLoading(true);
     const totalPages = Math.ceil(data.length / maxPageLimit);
@@ -137,7 +120,7 @@ const Bids = ({ title,data }) => {
     totalPages: totalPage,
     data: passengersData,
     title: title,
-    type:1,
+    type:status,
   };
 
   async function LoadNFT() {

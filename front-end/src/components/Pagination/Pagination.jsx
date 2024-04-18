@@ -60,14 +60,43 @@ const Pagination = (props)=>{
                           <div className='card-column'>
                             <div className="bids-card">
                               <div className="bids-card-top">
-                                <img className="photo" src={d.img} alt="" />
-                                <Link to={d.link}>
-                                  <p className="bids-title">{d.name}</p>
+                                <img className="photo" src={d.d.url} alt="" />
+                                <Link to={`/item/`+(d.d.id.id)+`/`+(d.p.ask)+`/`+(d.p.owner)+`/`+(props.type)}>
+                                  <p className="bids-title">{d.d.name}</p>
                                 </Link>
                               </div>
                               <div className="bids-card-bottom">
-                                <p>{d.price} <span>SUI</span></p>
-                                <p> <AiFillHeart /> {d.like}</p>
+                                <p>{d.p.ask} <span>SUI</span></p>
+                              </div>
+                            </div>
+                          </div>
+                          ))}
+                        </div>
+                    </div>
+                  </div>
+                )
+        }
+        else if(props.type ==2)
+        {
+            return(
+                <div className='bids section__padding'>
+                    <div className="bids-container">
+                      <div className="bids-container-text">
+                        <h1>{title}</h1>
+                      </div>
+                      <div className="bids-container-card">
+                        {data.map((d) => (
+                          <div className='card-column'>
+                            <div className="bids-card">
+                              <div className="bids-card-top">
+                                <img className="photo" src={d.d.url} alt="" />
+                                <Link to={`/BidItem/`+(d.d.id.id)+`/`+(d.p.ask)+`/`+(d.p.owner)+`/`+(d.p.autionID)}>
+                                  <p className="bids-title">{d.d.name}</p>
+                                </Link>
+                              </div>
+                              <div className="bids-card-bottom">
+                                <p>{d.q==null? d.p.ask:d.q.fields.change} <span>auction times</span></p>
+                                <p>{d.q==null? "":"Higest price:"+d.q.fields.funds+" SUI"}</p>
                               </div>
                             </div>
                           </div>

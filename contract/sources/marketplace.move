@@ -23,13 +23,21 @@ module contract::marketplace {
         sender: address,
     }
 
-    public entry fun create_auction<T: key + store>(to_sell: T, set_change: u64, ctx: &mut TxContext) {
+    public entry fun create_auction<T: key + store,COIN>(
+        bid_market: &mut BidMarket<COIN>,
+        to_sell: T, 
+        set_change: u64, 
+        ctx: &mut TxContext) 
+    {
+        let nft_address = object::id(&to_sell);
         let auction = auction_lib::create_auction(to_sell,set_change, ctx);
 
         event::emit(CreateAuction {
             sender: tx_context::sender(ctx)
         });
-
+        let item_id = object::id(&auction);
+  
+        bag::add(&mut bid_market.items,item_id, nft_address);
         auction_lib::share_object(auction);
     }
 
@@ -56,6 +64,14 @@ module contract::marketplace {
         payments: Table<address, Coin<COIN>>
     }
 
+    /// A shared `Marketplace`. Can be created by anyone using the
+    /// `create` function. One instance of `Marketplace` accepts
+    /// only one type of Coin - `COIN` for all its listings.
+    struct BidMarket<phantom COIN> has key {
+        id: UID,
+        items: Bag,
+    }
+
     /// A single listing which contains the listed item and its
     /// price in [`Coin<COIN>`].
     struct Listing has key, store {
@@ -65,7 +81,7 @@ module contract::marketplace {
     }
 
     /// Create a new shared Marketplace.
-    public fun create<COIN>(ctx: &mut TxContext) {
+    public entry fun create<COIN>(ctx: &mut TxContext) {
         let id = object::new(ctx);
         let items = bag::new(ctx);
         let payments = table::new<address, Coin<COIN>>(ctx);
@@ -76,8 +92,19 @@ module contract::marketplace {
         })
     }
 
+    /// Create a new shared Bid market.
+    public entry fun createBidMarket<COIN>(ctx: &mut TxContext) {
+        let id = object::new(ctx);
+        let items = bag::new(ctx);
+        transfer::share_object(BidMarket<COIN> { 
+            id, 
+            items,
+        })
+    }
+
+
     /// List an item at the Marketplace.
-    public fun list<T: key + store, COIN>(
+    public entry fun list<T: key + store, COIN>(
         marketplace: &mut Marketplace<COIN>,
         item: T,
         ask: u64,
@@ -114,7 +141,7 @@ module contract::marketplace {
     }
 
     /// Call [`delist`] and transfer item to the sender.
-    public fun delist_and_take<T: key + store, COIN>(
+    public entry fun delist_and_take<T: key + store, COIN>(
         marketplace: &mut Marketplace<COIN>,
         item_id: ID,
         ctx: &mut TxContext
@@ -156,7 +183,7 @@ module contract::marketplace {
     }
 
     /// Call [`buy`] and transfer item to the sender.
-    public fun buy_and_take<T: key + store, COIN>(
+    public entry fun buy_and_take<T: key + store, COIN>(
         marketplace: &mut Marketplace<COIN>,
         item_id: ID,
         paid: Coin<COIN>,
@@ -178,7 +205,7 @@ module contract::marketplace {
 
     #[lint_allow(self_transfer)]
     /// Call [`take_profits`] and transfer Coin object to the sender.
-    public fun take_profits_and_keep<COIN>(
+    public entry fun take_profits_and_keep<COIN>(
         marketplace: &mut Marketplace<COIN>,
         ctx: &mut TxContext
     ) {
