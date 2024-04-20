@@ -130,6 +130,7 @@ button{
 ul.nav {
   width: 60%;
   margin: 0 auto 2rem;
+  padding: 0.1rem;	
   display: flex;
   align-items: center;
   justify-content: space-between;
