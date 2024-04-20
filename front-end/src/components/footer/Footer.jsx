@@ -38,7 +38,7 @@ const Footer = () => {
       </div>
       <div className="footer-copyright">
         <div>
-        <p> © {(new Date().getFullYear())} CrpytoKet, Inc. All Rights Reserved</p>
+        <p> © {(new Date().getFullYear())} ForFuture, Inc. All Rights Reserved</p>
         </div>
         <div>
           <AiOutlineInstagram size={25} color='white' className='footer-icon' />
