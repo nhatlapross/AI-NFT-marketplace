@@ -209,3 +209,39 @@
     color: #6c757d;
     pointer-events: none;
   }
+
+  .prev-button {
+    background-color: #fc0fc0;
+    color: white;
+    border: none;
+    height: 40px;
+    width: 100px;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.15s;
+  }
+
+  .prev-button:hover {
+    background-image: linear-gradient(to right, rgba(222, 176, 216, 0), rgb(232, 131, 229));
+  }
+
+  .next-button {
+    background-color: #fc0fc0;
+    color: white;
+    border: none;
+    height: 40px;
+    width: 100px;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.15s;
+  }
+
+  .next-button:hover {
+    background-image: linear-gradient(to right,  rgba(222, 176, 216, 0), rgb(232, 131, 229));
+  } 
