@@ -148,13 +148,13 @@ const Pagination = (props)=>{
             </div>
             <ul className="pageNumbers"> 
                 <li className='first-child'>
-                    <button onClick={handlePrevClick} disabled={currentPage === pages[0]}>Prev</button>
+                    <button className="prev-button" onClick={handlePrevClick} disabled={currentPage === pages[0]}>Prev</button>
                 </li>
                 {pageDecremenEllipses}
                     {pageNumbers}
                 {pageIncrementEllipses}
                 <li className='last-child'>
-                    <button onClick={handleNextClick} disabled={currentPage === pages[pages.length-1]}>Next</button>
+                    <button className="next-button" onClick={handleNextClick} disabled={currentPage === pages[pages.length-1]}>Next</button>
                 </li>
             </ul>
         </div>
